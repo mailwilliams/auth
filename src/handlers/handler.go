@@ -18,27 +18,27 @@ func NewHandler(ctx context.Context, db *sql.DB, cache *redis.Client, app *fiber
 	//	creating a new baseHandler and assigning the baseHandler variable with the pointer
 	//	also creating dbErr and cacheError which will store the values of database connections
 	var (
-		baseHandler = &Handler{}
-		dbErr       error
-		cacheErr    error
+		handler  = &Handler{}
+		dbErr    error
+		cacheErr error
 	)
 
-	//	assigning newly initialized baseHandler the values from main.go
-	baseHandler.ctx = ctx
+	//	assigning newly initialized handler the values from main.go
+	handler.ctx = ctx
 
 	//	assigning database error to the result of the Connect function found in the database package
-	baseHandler.DB = db
-	dbErr = baseHandler.DB.Ping()
+	handler.DB = db
+	dbErr = handler.DB.Ping()
 
 	//	assigning cache error to the result of pinging a new redis connection
-	baseHandler.Cache = cache
-	cacheErr = baseHandler.Cache.Ping(context.Background()).Err()
+	handler.Cache = cache
+	cacheErr = handler.Cache.Ping(context.Background()).Err()
 
-	baseHandler.App = app
+	handler.App = app
 
-	//	return the memory address of the newly created baseHandler, as well as
+	//	return the memory address of the newly created handler, as well as
 	//	any possible mySQL or redis errors we received when trying to connect
-	return baseHandler, dbErr, cacheErr
+	return handler, dbErr, cacheErr
 }
 
 func (handler *Handler) CreateApp(config fiber.Config) {

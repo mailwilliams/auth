@@ -23,7 +23,7 @@ func main() {
 
 	cache := database.ConnectCache(ctx)
 
-	baseHandler, dbErr, cacheErr := handlers.NewHandler(ctx, db, cache, app)
+	handler, dbErr, cacheErr := handlers.NewHandler(ctx, db, cache, app)
 	if dbErr != nil {
 		panic(dbErr.Error())
 	}
@@ -33,10 +33,10 @@ func main() {
 
 	//	initializes new app, with optional config parameters
 	//	leaving fiber.Config{} empty because we may need to add something
-	baseHandler.CreateApp(fiber.Config{})
-	baseHandler.CreateRouter(cors.New(cors.Config{AllowCredentials: true}))
-	baseHandler.ConfigureRoutes()
-	if err := baseHandler.App.Listen(":8000"); err != nil {
+	handler.CreateApp(fiber.Config{})
+	handler.CreateRouter(cors.New(cors.Config{AllowCredentials: true}))
+	handler.ConfigureRoutes()
+	if err := handler.App.Listen(":8000"); err != nil {
 		panic(err)
 	}
 }

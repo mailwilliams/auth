@@ -8,12 +8,13 @@ services:
       - .:/app
     depends_on:
       - db
+      - redis
 
   db:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: ambassador
+      MYSQL_DATABASE: auth
       MYSQL_USER: root
       MYSQL_PASSWORD: password
       MYSQL_ROOT_USER: root
