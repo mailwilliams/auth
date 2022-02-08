@@ -19,13 +19,5 @@ func (handler *Handler) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := handler.DB.ExecContext(handler.ctx, `INSERT INTO users ()`)
-	if err != nil {
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
 	return c.JSON(user)
 }
