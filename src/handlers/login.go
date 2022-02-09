@@ -10,6 +10,35 @@ import (
 	"time"
 )
 
+/*
+Method:
+	POST	/api/login
+
+Description:
+	-	Receives an email and a password from the payload
+	-	Compares it against any records in the database
+	-	Generate JWT token
+	-	Save token as cookie
+
+Payload:
+	{
+		"email": "liam@sundial.ai",
+		"password": "abc123"
+	}
+
+Response:
+	-	200 OK
+		-	User successfully logged in, cookie set
+
+	-	401 Not Found
+		-	User not found
+		-	Invalid credentials
+
+	-	500 Internal Server Error
+		-	Database error
+		-	JWT token generation error
+*/
+
 func (handler *Handler) Login(c *fiber.Ctx) error {
 	var requestBody map[string]string
 
@@ -37,8 +66,8 @@ func (handler *Handler) Login(c *fiber.Ctx) error {
 	}
 
 	if err := user.ComparePassword(requestBody["password"]); err != nil {
-		return handler.ErrResponse(c, fiber.StatusBadRequest, fiber.Map{
-			"message": "Invalid credentials",
+		return handler.ErrResponse(c, fiber.StatusNotFound, fiber.Map{
+			"message": "user not found",
 		})
 	}
 
@@ -60,7 +89,7 @@ func (handler *Handler) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	handler.SetCookie(c, signedString)
+	handler.SetCookie(c, signedString, time.Now().Add(time.Hour*24))
 
 	return handler.SuccessResponse(c, http.StatusOK, nil)
 }

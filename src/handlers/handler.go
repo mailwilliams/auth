@@ -59,29 +59,34 @@ func (handler *Handler) Hello(c *fiber.Ctx) error {
 	})
 }
 
+//	default method for any error response returned through the api
 func (handler *Handler) ErrResponse(c *fiber.Ctx, statusCode int, fiberMap fiber.Map) error {
 	c.Status(statusCode)
 	return c.JSON(fiberMap)
 }
 
-func (handler *Handler) SuccessResponse(c *fiber.Ctx, statusCode int, fiberMap fiber.Map) error {
+//	default method for any success response returned through the api
+func (handler *Handler) SuccessResponse(c *fiber.Ctx, statusCode int, fiberMap interface{}) error {
 	c.Status(statusCode)
 	return c.JSON(fiberMap)
 }
 
+//	generate a signed jwt token string
 func (handler *Handler) GenerateJWT(claims jwt.Claims) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SecretKey))
 }
 
-func (handler *Handler) SetCookie(c *fiber.Ctx, jwt string) {
+//	set the jwt cookie for the user using the signed jwt token string
+func (handler *Handler) SetCookie(c *fiber.Ctx, jwt string, expires time.Time) {
 	c.Cookie(&fiber.Cookie{
 		Name:     "jwt",
 		Value:    jwt,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  expires,
 		HTTPOnly: true,
 	})
 }
 
+//	retrieve the signed jwt token string to parse for information
 func (handler *Handler) GetCookie(c *fiber.Ctx) string {
 	return c.Cookies("jwt")
 }

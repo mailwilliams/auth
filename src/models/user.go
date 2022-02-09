@@ -6,18 +6,20 @@ import (
 	"time"
 )
 
+//	User is the struct type of the database table auth.users
+//	It is also used in the handler methods to return JSON payloads
 type User struct {
-	UserID        uint64         `json:"user_id" gorm:"primaryKey:user_id"`
-	CreatedAt     time.Time      `json:"-"`
-	UpdatedAt     time.Time      `json:"-"`
-	DeletedAt     gorm.DeletedAt `json:"-" gorm:"index"`
-	WalletAddress string         `json:"wallet_address" gorm:"unique size:1024"`
-	Password      []byte         `json:"password" form:"size:1024"`
-	PasswordMatch []byte         `json:"password_match" gorm:"-"`
-	FirstName     string         `json:"first_name"`
-	LastName      string         `json:"last_name"`
-	Email         string         `json:"email" gorm:"unique size:256"`
-	Mobile        string         `json:"mobile" gorm:"unique size:256"`
+	UserID          uint64         `json:"user_id" gorm:"primaryKey:user_id"`
+	CreatedAt       time.Time      `json:"-"`
+	UpdatedAt       time.Time      `json:"-"`
+	DeletedAt       gorm.DeletedAt `json:"-" gorm:"index"`
+	WalletAddress   string         `json:"wallet_address" gorm:"unique size:1024"`
+	Password        []byte         `json:"password,omitempty" form:"size:1024"`
+	PasswordConfirm []byte         `json:"password_confirm,omitempty" gorm:"-"`
+	FirstName       string         `json:"first_name"`
+	LastName        string         `json:"last_name"`
+	Email           string         `json:"email,omitempty" gorm:"unique size:256"`
+	Mobile          string         `json:"mobile,omitempty" gorm:"unique size:256"`
 }
 
 func (user *User) SetPassword(password []byte) error {
