@@ -12,7 +12,7 @@ func (handler *Handler) Register(c *fiber.Ctx) error {
 		return err
 	}
 
-	if user.Password != user.PasswordMatch {
+	if string(user.Password) != string(user.PasswordMatch) {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
 			"message": "passwords do not match",
