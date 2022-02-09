@@ -6,7 +6,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/mailwilliams/auth/src/database"
 	"github.com/mailwilliams/auth/src/handlers"
-	"github.com/mailwilliams/auth/src/migrations"
 )
 
 var (
@@ -15,12 +14,12 @@ var (
 
 func main() {
 
-	migrationsDB, err := migrations.NewGORMConnection()
+	migrationsDB, err := database.NewGORMConnection()
 	if err != nil {
 		panic(err)
 	}
 
-	if err := migrations.AutoMigrate(migrationsDB); err != nil {
+	if err := database.AutoMigrate(migrationsDB); err != nil {
 		panic(err)
 	}
 
