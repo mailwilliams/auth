@@ -39,10 +39,10 @@ func main() {
 	//	ping database and cache, assign app to handler
 	handler, dbErr, cacheErr := handlers.NewHandler(ctx, db, cache, app)
 	if dbErr != nil {
-		panic(dbErr.Error())
+		panic(dbErr)
 	}
 	if cacheErr != nil {
-		panic(cacheErr.Error())
+		panic(cacheErr)
 	}
 
 	//	initializes new app, with optional config parameters
@@ -52,7 +52,7 @@ func main() {
 
 	//	map endpoints to their intended methods
 	handler.ConfigureRoutes()
-	
+
 	//	begin to listen for requests
 	if err := handler.App.Listen(":8000"); err != nil {
 		panic(err)
