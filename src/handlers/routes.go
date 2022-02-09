@@ -1,7 +1,5 @@
 package handlers
 
-import "github.com/mailwilliams/auth/src/middlewares"
-
 func (handler *Handler) ConfigureRoutes() {
 	app := handler.App
 	app.Get("/", handler.Hello)
@@ -10,10 +8,10 @@ func (handler *Handler) ConfigureRoutes() {
 	//	/api
 	api := app.Group("api")
 	api.Post("register", handler.Register)
-	//api.Post("login", controllers.Login)
+	api.Post("login", handler.Login)
 
 	//	authenticated API paths
-	_ = api.Use(middlewares.IsAuthenticated)
+	_ = api.Use(handler.IsAuthenticated)
 
 	//	/api/admin
 	_ = api.Group("admin")

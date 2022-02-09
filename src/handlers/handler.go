@@ -3,9 +3,13 @@ package handlers
 import (
 	"context"
 	"database/sql"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
+	"time"
 )
+
+const SecretKey = "secret"
 
 type Handler struct {
 	DB    *sql.DB
@@ -53,4 +57,31 @@ func (handler *Handler) Hello(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "hi",
 	})
+}
+
+func (handler *Handler) ErrResponse(c *fiber.Ctx, statusCode int, fiberMap fiber.Map) error {
+	c.Status(statusCode)
+	return c.JSON(fiberMap)
+}
+
+func (handler *Handler) SuccessResponse(c *fiber.Ctx, statusCode int, fiberMap fiber.Map) error {
+	c.Status(statusCode)
+	return c.JSON(fiberMap)
+}
+
+func (handler *Handler) GenerateJWT(claims jwt.Claims) (string, error) {
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SecretKey))
+}
+
+func (handler *Handler) SetCookie(c *fiber.Ctx, jwt string) {
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    jwt,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	})
+}
+
+func (handler *Handler) GetCookie(c *fiber.Ctx) string {
+	return c.Cookies("jwt")
 }
