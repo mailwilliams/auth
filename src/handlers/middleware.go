@@ -40,7 +40,7 @@ func (handler *Handler) GetUserID(c *fiber.Ctx) (uint64, error) {
 	return uint64(userID), nil
 }
 
-//	GetWalletAddress is a middleware method that will return a user's ID
+//	GetWalletAddress is a middleware method that will return a user's wallet address
 //	by parsing the token stored in the cookie
 func (handler *Handler) GetWalletAddress(c *fiber.Ctx) (string, error) {
 	token, err := jwt.ParseWithClaims(handler.GetCookie(c), &models.JWT{}, func(token *jwt.Token) (interface{}, error) {
