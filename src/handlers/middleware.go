@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/mailwilliams/auth/src/models"
 	"strconv"
 )
 
@@ -10,7 +11,7 @@ import (
 //	categories that are permitted if the user has a valid jwt token
 func (handler *Handler) IsAuthenticated(c *fiber.Ctx) error {
 	cookie := handler.GetCookie(c)
-	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(cookie, &models.JWT{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SecretKey), nil
 	})
 

@@ -17,6 +17,8 @@ func (handler *Handler) ConfigureRoutes() {
 	authenticatedUser := api.Use(handler.IsAuthenticated)
 	authenticatedUser.Get("/users", handler.ListUsers)
 	authenticatedUser.Put("/users/me", handler.UpdateInfo)
+	authenticatedUser.Put("/users/me/password", handler.UpdatePassword)
+	authenticatedUser.Put("/users/me/wallet", handler.UpdateWalletAddress)
 
 	//	/api/admin
 	_ = api.Group("admin")

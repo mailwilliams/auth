@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/mailwilliams/auth/src/database/SQL"
 	"github.com/mailwilliams/auth/src/models"
 	"net/http"
 )
@@ -33,7 +34,7 @@ func (handler *Handler) ListUsers(c *fiber.Ctx) error {
 
 	//	finding all users
 	//	TODO: Add filtering
-	rows, err := handler.DB.QueryContext(handler.ctx, listUsersSQL())
+	rows, err := handler.DB.QueryContext(handler.ctx, SQL.ListUsers)
 	if err != nil {
 		return handler.ErrResponse(c, fiber.StatusInternalServerError, fiber.Map{
 			"message": err.Error(),
@@ -56,15 +57,4 @@ func (handler *Handler) ListUsers(c *fiber.Ctx) error {
 	}
 
 	return handler.SuccessResponse(c, http.StatusOK, users)
-}
-
-func listUsersSQL() string {
-	return `
-SELECT
-	user_id,
-	wallet_address,
-	first_name,
-	last_name
-FROM
-	auth.users;`
 }
