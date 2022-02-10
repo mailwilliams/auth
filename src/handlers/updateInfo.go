@@ -40,7 +40,7 @@ Response:
 		"email": "liam@sundial.ai2",
 		"first_name": "Liam",
 		"last_name": "Williams"
-		"mobile": "+19254576277
+		"mobile": "+19254576277"
 	}
 */
 
