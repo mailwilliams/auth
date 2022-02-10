@@ -27,7 +27,7 @@ func (handler *Handler) IsAuthenticated(c *fiber.Ctx) error {
 //	GetUserID is a middleware method that will return a user's ID
 //	by parsing the token stored in the cookie
 func (handler *Handler) GetUserID(c *fiber.Ctx) (uint64, error) {
-	token, err := jwt.ParseWithClaims(handler.GetCookie(c), &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(handler.GetCookie(c), &models.JWT{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SecretKey), nil
 	})
 
@@ -35,7 +35,21 @@ func (handler *Handler) GetUserID(c *fiber.Ctx) (uint64, error) {
 		return 0, err
 	}
 
-	userID, err := strconv.ParseInt(token.Claims.(*jwt.StandardClaims).Subject, 10, 64)
+	userID, err := strconv.ParseInt(token.Claims.(*models.JWT).Subject, 10, 64)
 
 	return uint64(userID), nil
+}
+
+//	GetWalletAddress is a middleware method that will return a user's ID
+//	by parsing the token stored in the cookie
+func (handler *Handler) GetWalletAddress(c *fiber.Ctx) (string, error) {
+	token, err := jwt.ParseWithClaims(handler.GetCookie(c), &models.JWT{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return token.Claims.(*models.JWT).WalletAddress, nil
 }
